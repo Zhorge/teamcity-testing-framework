@@ -4,9 +4,9 @@ import com.example.teamcity.api.enums.Endpoint;
 import com.example.teamcity.api.models.BuildType;
 import com.example.teamcity.api.models.Project;
 import com.example.teamcity.api.models.User;
-import com.example.teamcity.api.requests.checked.CheckedBase;
+import com.example.teamcity.api.requests.CheckedRequests;
 import com.example.teamcity.api.spec.Specifications;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.Arrays;
 import org.testng.annotations.Test;
 
 import static com.example.teamcity.api.generators.TestDataGenerator.generate;
@@ -17,35 +17,19 @@ public class BuildTypeTest extends BaseApiTest {
   @Test(description = "User should be able to create build type", groups = {"Positive", "CRUD"})
   public void userCreatesBuildTypeTest() {
     var user = generate(User.class);
+    var userCheckedRequests = new CheckedRequests(Specifications.authSpec(user));
 
-    step("Create user", () ->  {
-      var requester = new CheckedBase<User>(Specifications.superUserSpec(), Endpoint.USERS);
-      requester.create(user);
-    });
+    superUserCheckRequests.getRequester(Endpoint.USERS).create(user);
 
     var project = generate(Project.class);
-    AtomicReference<String> projectId = new AtomicReference<>("");
+    project = userCheckedRequests.<Project>getRequester(Endpoint.PROJECTS).create(project);
 
-    step("Create project by user", () -> {
-      var requester = new CheckedBase<Project>(Specifications.authSpec(user), Endpoint.PROJECTS);
-      projectId.set(requester.create(project).getId());
-    });
+    var buildType = generate(Arrays.asList(project), BuildType.class);
+    userCheckedRequests.getRequester(Endpoint.BUILD_TYPES).create(buildType);
 
-    var buildType = generate(BuildType.class);
-    buildType.setProject(Project.builder().id(projectId.get()).locator(null).build());
+    var createdBuildType = userCheckedRequests.<BuildType>getRequester(Endpoint.BUILD_TYPES).read(buildType.getId());
 
-    var requester = new CheckedBase<BuildType>(Specifications.authSpec(user), Endpoint.BUILD_TYPES);
-    AtomicReference<String> buildTypeId = new AtomicReference<>("");
-
-    step("Create buildType for project by user", () -> {
-      buildTypeId.set(requester.create(buildType).getId());
-    });
-
-    step("Check buildType was created successfully with correct data", () ->  {
-      var createdBuildType = requester.read(buildTypeId.get());
-
-      softy.assertEquals(buildType.getName(), createdBuildType.getName(), "Build type name is not correct");
-    });
+    softy.assertEquals(buildType.getName(), createdBuildType.getName(), "Build type name is not correct");
   }
 
   @Test(
