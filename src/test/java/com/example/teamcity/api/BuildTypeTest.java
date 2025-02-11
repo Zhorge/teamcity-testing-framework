@@ -5,8 +5,11 @@ import com.example.teamcity.api.models.BuildType;
 import com.example.teamcity.api.models.Project;
 import com.example.teamcity.api.models.User;
 import com.example.teamcity.api.requests.CheckedRequests;
+import com.example.teamcity.api.requests.unchecked.UncheckedBase;
 import com.example.teamcity.api.spec.Specifications;
 import java.util.Arrays;
+import org.apache.http.HttpStatus;
+import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
 import static com.example.teamcity.api.generators.TestDataGenerator.generate;
@@ -36,11 +39,27 @@ public class BuildTypeTest extends BaseApiTest {
       description = "User should not be able to create two build types with the same id",
       groups = {"Negative", "CRUD"})
   public void userCreatesTwoBuildTypesWithTheSameIdTest() {
-    step("Create user");
-    step("Create project by user");
-    step("Create buildType1 for project by user");
-    step("Create buildType2 with same id as buildType1 for project by user");
-    step("Check buildType2 was not created with bad request code");
+    var user = generate(User.class);
+    var userCheckedRequests = new CheckedRequests(Specifications.authSpec(user));
+
+    superUserCheckRequests.getRequester(Endpoint.USERS).create(user);
+
+    var project = generate(Project.class);
+    project = userCheckedRequests.<Project>getRequester(Endpoint.PROJECTS).create(project);
+
+    var buildType1 = generate(Arrays.asList(project), BuildType.class);
+    var buildType2 = generate(Arrays.asList(project), BuildType.class, buildType1.getId());
+
+    userCheckedRequests.getRequester(Endpoint.BUILD_TYPES).create(buildType1);
+    new UncheckedBase(Specifications.authSpec(user), Endpoint.BUILD_TYPES)
+        .create(buildType2)
+        .then()
+        .assertThat()
+        .statusCode(HttpStatus.SC_BAD_REQUEST)
+        .body(
+            Matchers.containsString(
+                "The build configuration / template ID \"%s\" is already used by another configuration or template"
+                    .formatted(buildType1.getId())));
   }
 
   @Test(
