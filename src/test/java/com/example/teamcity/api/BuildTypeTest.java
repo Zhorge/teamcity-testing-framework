@@ -19,47 +19,39 @@ import static io.qameta.allure.Allure.step;
 public class BuildTypeTest extends BaseApiTest {
   @Test(description = "User should be able to create build type", groups = {"Positive", "CRUD"})
   public void userCreatesBuildTypeTest() {
-    var user = generate(User.class);
-    var userCheckedRequests = new CheckedRequests(Specifications.authSpec(user));
+    var userCheckedRequests = new CheckedRequests(Specifications.authSpec(testData.getUser()));
+    superUserCheckRequests.getRequester(Endpoint.USERS).create(testData.getUser());
 
-    superUserCheckRequests.getRequester(Endpoint.USERS).create(user);
+    userCheckedRequests.<Project>getRequester(Endpoint.PROJECTS).create(testData.getProject());
 
-    var project = generate(Project.class);
-    project = userCheckedRequests.<Project>getRequester(Endpoint.PROJECTS).create(project);
+    userCheckedRequests.getRequester(Endpoint.BUILD_TYPES).create(testData.getBuildType());
 
-    var buildType = generate(Arrays.asList(project), BuildType.class);
-    userCheckedRequests.getRequester(Endpoint.BUILD_TYPES).create(buildType);
+    var createdBuildType = userCheckedRequests.<BuildType>getRequester(Endpoint.BUILD_TYPES).read(testData.getBuildType().getId());
 
-    var createdBuildType = userCheckedRequests.<BuildType>getRequester(Endpoint.BUILD_TYPES).read(buildType.getId());
-
-    softy.assertEquals(buildType.getName(), createdBuildType.getName(), "Build type name is not correct");
+    softy.assertEquals(testData.getBuildType().getName(), createdBuildType.getName(), "Build type name is not correct");
   }
 
   @Test(
       description = "User should not be able to create two build types with the same id",
       groups = {"Negative", "CRUD"})
   public void userCreatesTwoBuildTypesWithTheSameIdTest() {
-    var user = generate(User.class);
-    var userCheckedRequests = new CheckedRequests(Specifications.authSpec(user));
+    var buildTypeWithSameId = generate(Arrays.asList(testData.getProject()), BuildType.class, testData.getBuildType().getId());
 
-    superUserCheckRequests.getRequester(Endpoint.USERS).create(user);
+    var userCheckedRequests = new CheckedRequests(Specifications.authSpec(testData.getUser()));
+    superUserCheckRequests.getRequester(Endpoint.USERS).create(testData.getUser());
 
-    var project = generate(Project.class);
-    project = userCheckedRequests.<Project>getRequester(Endpoint.PROJECTS).create(project);
+    userCheckedRequests.<Project>getRequester(Endpoint.PROJECTS).create(testData.getProject());
 
-    var buildType1 = generate(Arrays.asList(project), BuildType.class);
-    var buildType2 = generate(Arrays.asList(project), BuildType.class, buildType1.getId());
-
-    userCheckedRequests.getRequester(Endpoint.BUILD_TYPES).create(buildType1);
-    new UncheckedBase(Specifications.authSpec(user), Endpoint.BUILD_TYPES)
-        .create(buildType2)
+    userCheckedRequests.getRequester(Endpoint.BUILD_TYPES).create(testData.getBuildType());
+    new UncheckedBase(Specifications.authSpec(testData.getUser()), Endpoint.BUILD_TYPES)
+        .create(buildTypeWithSameId)
         .then()
         .assertThat()
         .statusCode(HttpStatus.SC_BAD_REQUEST)
         .body(
             Matchers.containsString(
                 "The build configuration / template ID \"%s\" is already used by another configuration or template"
-                    .formatted(buildType1.getId())));
+                    .formatted(testData.getBuildType().getId())));
   }
 
   @Test(
