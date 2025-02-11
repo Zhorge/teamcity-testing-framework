@@ -20,7 +20,7 @@ public class Specifications {
     return reqBuilder;
   }
 
-  public static RequestSpecification superUserAuth() {
+  public static RequestSpecification superUserSpec() {
     var requestBuilder = reqBuilder();
     requestBuilder.setBaseUri(
         "http://%s:%s@%s/httpAuth"
