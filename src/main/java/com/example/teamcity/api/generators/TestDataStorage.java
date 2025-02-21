@@ -32,7 +32,7 @@ public class TestDataStorage {
     createdEntitiesMap.forEach(
         ((endpoint, ids) ->
             ids.forEach(
-                id -> new UncheckedBase(Specifications.superUserSpec(), endpoint).delete(id))));
+                id -> new UncheckedBase(Specifications.superUserSpec(), endpoint).deleteById(id))));
 
     createdEntitiesMap.clear();
   }

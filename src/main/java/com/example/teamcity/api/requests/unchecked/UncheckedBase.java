@@ -15,16 +15,24 @@ public class UncheckedBase extends Request implements CrudInterface {
   }
 
   @Override
-  public Response create(BaseModel model) {
+  public Response create(BaseModel body) {
     return RestAssured
         .given()
         .spec(spec)
-        .body(model)
+        .body(body)
         .post(endpoint.getUrl());
   }
 
   @Override
-  public Response read(String id) {
+  public Response read() {
+    return RestAssured
+        .given()
+        .spec(spec)
+        .get(endpoint.getUrl());
+  }
+
+  @Override
+  public Response readById(String id) {
     return RestAssured
         .given()
         .spec(spec)
@@ -32,16 +40,41 @@ public class UncheckedBase extends Request implements CrudInterface {
   }
 
   @Override
-  public Response update(String id, BaseModel model) {
+  public Response readByLocator(String locator) {
     return RestAssured
         .given()
         .spec(spec)
-        .body(model)
-        .put(endpoint.getUrl() + "/id:" + id);
+        .get(endpoint.getUrl() + "/" + locator);
   }
 
   @Override
-  public Response delete(String id) {
+  public Response update(BaseModel body) {
+    return RestAssured
+        .given()
+        .spec(spec)
+        .body(body)
+        .put(endpoint.getUrl());
+  }
+
+  @Override
+  public Response updateById(String id, BaseModel body) {
+    return RestAssured
+        .given()
+        .spec(spec)
+        .body(body)
+        .put(endpoint.getUrl() + "/id:" + id);
+  }
+
+  public Response updateByLocator(String locator, BaseModel body) {
+    return RestAssured
+        .given()
+        .spec(spec)
+        .body(body)
+        .put(endpoint.getUrl().formatted(locator));
+  }
+
+  @Override
+  public Response deleteById(String id) {
     return RestAssured
         .given()
         .spec(spec)

@@ -19,9 +19,9 @@ public final class CheckedBase<T extends BaseModel> extends Request implements C
   }
 
   @Override
-  public T create(BaseModel model) {
+  public T create(BaseModel body) {
     var createdModel = (T) uncheckedBase
-        .create(model)
+        .create(body)
         .then().assertThat().statusCode(HttpStatus.SC_OK)
         .extract().as(endpoint.getModelClass());
 
@@ -30,25 +30,57 @@ public final class CheckedBase<T extends BaseModel> extends Request implements C
   }
 
   @Override
-  public T read(String id) {
+  public T read() {
     return (T) uncheckedBase
-        .read(id)
+        .read()
         .then().assertThat().statusCode(HttpStatus.SC_OK)
         .extract().as(endpoint.getModelClass());
   }
 
   @Override
-  public T update(String id, BaseModel model) {
+  public T readById(String id) {
     return (T) uncheckedBase
-        .update(id, model)
+        .readById(id)
         .then().assertThat().statusCode(HttpStatus.SC_OK)
         .extract().as(endpoint.getModelClass());
   }
 
   @Override
-  public Object delete(String id) {
+  public T readByLocator(String locator) {
+    return (T) uncheckedBase
+        .readByLocator(locator)
+        .then().assertThat().statusCode(HttpStatus.SC_OK)
+        .extract().as(endpoint.getModelClass());
+  }
+
+  @Override
+  public T update(BaseModel body) {
+    return (T) uncheckedBase
+        .update(body)
+        .then().assertThat().statusCode(HttpStatus.SC_OK)
+        .extract().as(endpoint.getModelClass());
+  }
+
+  @Override
+  public T updateById(String id, BaseModel body) {
+    return (T) uncheckedBase
+        .updateById(id, body)
+        .then().assertThat().statusCode(HttpStatus.SC_OK)
+        .extract().as(endpoint.getModelClass());
+  }
+
+  @Override
+  public T updateByLocator(String locator, BaseModel body) {
+    return (T) uncheckedBase
+        .updateByLocator(locator, body)
+        .then().assertThat().statusCode(HttpStatus.SC_OK)
+        .extract().as(endpoint.getModelClass());
+  }
+
+  @Override
+  public Object deleteById(String id) {
     return uncheckedBase
-        .delete(id)
+        .deleteById(id)
         .then().assertThat().statusCode(HttpStatus.SC_OK)
         .extract().asString();
   }
