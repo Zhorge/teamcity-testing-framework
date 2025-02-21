@@ -19,6 +19,7 @@ import org.testng.asserts.SoftAssert;
 public class BaseTest {
   protected SoftAssert softy;
   protected CheckedRequests superUserCheckRequests = new CheckedRequests(Specifications.superUserSpec());
+  protected CheckedRequests userCheckedRequests;
   protected TestData testData;
 
   @BeforeSuite(alwaysRun = true)
@@ -30,6 +31,7 @@ public class BaseTest {
   public void beforeTest() {
     softy = new SoftAssert();
     testData = generate();
+    userCheckedRequests = new CheckedRequests(Specifications.authSpec(testData.getUser()));
   }
 
   @AfterMethod(alwaysRun = true)
