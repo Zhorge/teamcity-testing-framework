@@ -1,22 +1,26 @@
 package com.example.teamcity.api;
 
 import com.example.teamcity.api.enums.Endpoint;
+import com.example.teamcity.api.generators.RoleGenerator;
 import com.example.teamcity.api.models.BuildType;
 import com.example.teamcity.api.models.Project;
+import com.example.teamcity.api.models.Role;
 import com.example.teamcity.api.models.Roles;
+import com.example.teamcity.api.models.Steps;
 import com.example.teamcity.api.models.TestData;
 import com.example.teamcity.api.requests.unchecked.UncheckedBase;
 import com.example.teamcity.api.spec.Specifications;
 import java.util.Arrays;
-import org.apache.http.HttpStatus;
-import org.hamcrest.Matchers;
+import java.util.List;
 import org.testng.annotations.Test;
 
 import static com.example.teamcity.api.generators.TestDataGenerator.generate;
+import static com.example.teamcity.api.spec.ValidationResponseSpecifications.checkBuildTypeWithIdAlreadyExist;
+import static com.example.teamcity.api.spec.ValidationResponseSpecifications.checkProjectIdWrongPermission;
 
 @Test(groups = {"Regression"})
 public class BuildTypeTest extends BaseApiTest {
-  private static String PROJECT_ADMIN_ROLE_ID = "PROJECT_ADMIN";
+  private static final String BUILD_TYPE_IS_NOT_CORRECT_MESSAGE = "Build type is not correct";
 
   @Test(
       description = "User should be able to create build type",
@@ -30,10 +34,11 @@ public class BuildTypeTest extends BaseApiTest {
         userCheckedRequests
             .<BuildType>getRequester(Endpoint.BUILD_TYPES)
             .readById(testData.getBuildType().getId());
-    softy.assertEquals(
-        testData.getBuildType().getName(),
-        createdBuildType.getName(),
-        "Build type name is not correct");
+
+    BuildType expectedBuildType = testData.getBuildType();
+    expectedBuildType.setSteps(new Steps(0, null));
+
+    softy.assertEquals(createdBuildType, expectedBuildType, BUILD_TYPE_IS_NOT_CORRECT_MESSAGE);
   }
 
   @Test(
@@ -51,12 +56,7 @@ public class BuildTypeTest extends BaseApiTest {
     new UncheckedBase(Specifications.authSpec(testData.getUser()), Endpoint.BUILD_TYPES)
         .create(buildTypeWithSameId)
         .then()
-        .assertThat()
-        .statusCode(HttpStatus.SC_BAD_REQUEST)
-        .body(
-            Matchers.containsString(
-                "The build configuration / template ID \"%s\" is already used by another configuration or template"
-                    .formatted(testData.getBuildType().getId())));
+        .spec(checkBuildTypeWithIdAlreadyExist(testData.getBuildType().getId()));
   }
 
   @Test(
@@ -70,12 +70,11 @@ public class BuildTypeTest extends BaseApiTest {
         userCheckedRequests
             .<BuildType>getRequester(Endpoint.BUILD_TYPES)
             .readById(testData.getBuildType().getId());
-    softy.assertEquals(
-        createdBuildType.getId(), testData.getBuildType().getId(), "Build type id is not correct");
-    softy.assertEquals(
-        createdBuildType.getProject().getId(),
-        testData.getProject().getId(),
-        "Project id is not correct");
+
+    BuildType expectedBuildType = testData.getBuildType();
+    expectedBuildType.setSteps(new Steps(0, null));
+
+    softy.assertEquals(createdBuildType, expectedBuildType, BUILD_TYPE_IS_NOT_CORRECT_MESSAGE);
   }
 
   @Test(
@@ -91,15 +90,7 @@ public class BuildTypeTest extends BaseApiTest {
     new UncheckedBase(Specifications.authSpec(testData2.getUser()), Endpoint.BUILD_TYPES)
         .create(testData.getBuildType())
         .then()
-        .assertThat()
-        .statusCode(HttpStatus.SC_FORBIDDEN)
-        .body(
-            Matchers.containsString(
-                "You do not have enough permissions to edit project with id: %s"
-                    .formatted(testData.getProject().getId())))
-        .body(
-            Matchers.containsString(
-                "Access denied. Check the user has enough permissions to perform the operation."));
+        .spec(checkProjectIdWrongPermission(testData.getProject().getId()));
   }
 
   private void setupAnotherProject(TestData testData) {
@@ -109,11 +100,13 @@ public class BuildTypeTest extends BaseApiTest {
   }
 
   private void assignProjectAdminRoleFor(TestData testData) {
+    // Генерация роли через RoleGenerator
+    Role projectAdminRole = RoleGenerator.generateProjectAdmin(testData.getProject().getId());
+    // Обновление ролей пользователя
+    testData.getUser().getRoles().setRole(List.of(projectAdminRole));
+
     String userLocator = "username:" + testData.getUser().getUsername();
-    String projectLocator = "p:" + testData.getProject().getId();
-    Roles roles =
-        generate(
-            Arrays.asList(testData.getUser()), Roles.class, PROJECT_ADMIN_ROLE_ID, projectLocator);
+    Roles roles = testData.getUser().getRoles();
     superUserCheckRequests.getRequester(Endpoint.USERS_ROLES).updateByLocator(userLocator, roles);
   }
 }

@@ -10,6 +10,10 @@ import io.restassured.specification.RequestSpecification;
 import java.util.List;
 
 public class Specifications {
+  private Specifications() {
+    throw new IllegalStateException("Utility class");
+  }
+
   private static RequestSpecBuilder reqBuilder() {
     RequestSpecBuilder reqBuilder = new RequestSpecBuilder();
     reqBuilder.setBaseUri("http://" + Config.getProperty("host")).build();
