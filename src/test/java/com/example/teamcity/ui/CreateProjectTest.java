@@ -2,6 +2,8 @@ package com.example.teamcity.ui;
 
 import static io.qameta.allure.Allure.step;
 
+import com.example.teamcity.api.enums.Endpoint;
+import com.example.teamcity.ui.pages.LoginPage;
 import org.testng.annotations.Test;
 
 @Test(groups = {"Regression"})
@@ -10,6 +12,8 @@ public class CreateProjectTest extends BaseUiTest {
   public void userCreatesProject() {
     // подготовка окружения
     step("Login as user");
+    superUserCheckRequests.getRequester(Endpoint.USERS).create(testData.getUser());
+    LoginPage.open().login(testData.getUser());
 
     // взаимодействие с UI
     step("Open `Create Project Page` (http://localhost:8111/admin/createObjectMenu.html)");
