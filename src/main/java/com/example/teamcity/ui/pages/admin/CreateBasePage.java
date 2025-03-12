@@ -1,0 +1,21 @@
+package com.example.teamcity.ui.pages.admin;
+
+import static com.codeborne.selenide.Selectors.byId;
+import static com.codeborne.selenide.Selectors.byValue;
+import static com.codeborne.selenide.Selenide.$;
+
+import com.codeborne.selenide.SelenideElement;
+import com.example.teamcity.ui.pages.BasePage;
+
+public abstract class CreateBasePage extends BasePage {
+  protected static final String CREATE_URL = "/admin/createObjectMenu.html?projectId=%s&showMode=%s";
+
+  protected SelenideElement urlInput = $(byId("url"));
+  protected SelenideElement submitButton = $(byValue("Proceed"));
+  protected SelenideElement buildTypeNameInput = $(byId("buildTypeName"));
+
+  protected void baseCreateForm(String url) {
+    urlInput.val(url);
+    submitButton.click();
+  }
+}

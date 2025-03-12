@@ -5,13 +5,14 @@ import com.codeborne.selenide.SelenideElement;
 import com.example.teamcity.api.models.User;
 
 import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.page;
 
 public class LoginPage extends BasePage {
   private static final String LOGIN_URL = "/login.html";
 
-  private SelenideElement inputUsername = $("#username");
-  private SelenideElement inputPassword = $("#password");
-  private SelenideElement inputSubmitLogin = $(".loginButton");
+  private final SelenideElement inputUsername = $("#username");
+  private final SelenideElement inputPassword = $("#password");
+  private final SelenideElement inputSubmitLogin = $(".loginButton");
 
   public static LoginPage open() {
     return Selenide.open(LOGIN_URL, LoginPage.class);
@@ -22,7 +23,6 @@ public class LoginPage extends BasePage {
     inputUsername.val(user.getUsername());
     inputPassword.val(user.getPassword());
     inputSubmitLogin.click();
-
-    return Selenide.page(ProjectsPage.class);
+    return page(ProjectsPage.class);
   }
 }
