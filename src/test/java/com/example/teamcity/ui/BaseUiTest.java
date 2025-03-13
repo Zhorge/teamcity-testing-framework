@@ -30,8 +30,8 @@ public class BaseUiTest extends BaseTest {
     Selenide.closeWebDriver();
   }
 
-  protected void logisAs(User user) {
-    superUserCheckRequests.getRequester(Endpoint.USERS).create(testData.getUser());
-    LoginPage.open().login(testData.getUser());
+  protected void loginAs(User user) {
+    superUserCheckRequests.getRequester(Endpoint.USERS).create(user);
+    LoginPage.open().login(user);
   }
 }
