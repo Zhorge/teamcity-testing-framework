@@ -6,6 +6,7 @@ import static io.qameta.allure.Allure.step;
 import com.example.teamcity.api.enums.Endpoint;
 import com.example.teamcity.api.models.Project;
 import com.example.teamcity.ui.pages.ProjectPage;
+import com.example.teamcity.ui.pages.ProjectsPage;
 import com.example.teamcity.ui.pages.admin.CreateProjectPage;
 import org.testng.annotations.Test;
 
@@ -37,6 +38,11 @@ public class CreateProjectTest extends BaseUiTest {
     // (корректность считывания данных и отображение данных на UI)
     ProjectPage.open(createdProject.getId())
         .title.shouldHave(exactText(testData.getProject().getName()));
+
+    var projectExists =
+        ProjectsPage.open().getProjects().stream()
+            .anyMatch(project -> project.getName().equals(testData.getProject().getName()));
+    softy.assertTrue(projectExists);
   }
 
   @Test(
