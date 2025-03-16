@@ -41,7 +41,7 @@ public class CreateProjectTest extends BaseUiTest {
 
     var projectExists =
         ProjectsPage.open().getProjects().stream()
-            .anyMatch(project -> project.getName().equals(testData.getProject().getName()));
+            .anyMatch(project -> project.getName().text().equals(testData.getProject().getName()));
     softy.assertTrue(projectExists);
   }
 
