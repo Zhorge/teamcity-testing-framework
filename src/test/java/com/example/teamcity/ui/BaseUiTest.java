@@ -17,12 +17,12 @@ public class BaseUiTest extends BaseTest {
   public void setupUiTest() {
     Configuration.browser = Config.getProperty("browser");
     Configuration.baseUrl = "http://" + Config.getProperty("host");
-    // НЕТ ПИШИТЕ UI ТЕСТЫ С ЛОКАЛЬНЫМ БРАУЗЕРОМ
-    // А ПОТОМ ЗАПУСКАЕТЕ НА REMOTE BROWSER
+    // НЕТ ПИШИТЕ UI ТЕСТЫ С ЛОКАЛЬНЫМ БРАУЗЕРОМ - СРАЗУ ПРОВЕРЯЕМ НА REMOTE БРАУЗЕРЕ
     Configuration.remote = Config.getProperty("remote");
     Configuration.browserSize = Config.getProperty("browserSize");
 
-    Configuration.browserCapabilities.setCapability("selenoid:options", Map.of("enableVNC", true, "enableLog", true));
+    Configuration.browserCapabilities.setCapability(
+        "selenoid:options", Map.of("enableVNC", true, "enableLog", true));
   }
 
   @AfterMethod(alwaysRun = true)

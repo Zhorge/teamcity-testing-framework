@@ -11,8 +11,7 @@ public abstract class BasePage {
   protected static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(30);
 
   protected <T extends BasePageElement> List<T> generatePageElements(
-      ElementsCollection collection, Function<SelenideElement, T> creator)
-  {
+      ElementsCollection collection, Function<SelenideElement, T> creator) {
     return collection.stream().map(creator).toList();
   }
 

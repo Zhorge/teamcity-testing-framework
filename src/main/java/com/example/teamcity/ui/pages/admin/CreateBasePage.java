@@ -10,7 +10,8 @@ import com.codeborne.selenide.SelenideElement;
 import com.example.teamcity.ui.pages.BasePage;
 
 public abstract class CreateBasePage extends BasePage {
-  protected static final String CREATE_URL = "/admin/createObjectMenu.html?projectId=%s&showMode=%s";
+  protected static final String CREATE_URL =
+      "/admin/createObjectMenu.html?projectId=%s&showMode=%s";
 
   protected SelenideElement urlInput = $(byId("url"));
   protected SelenideElement submitButton = $(byValue("Proceed"));

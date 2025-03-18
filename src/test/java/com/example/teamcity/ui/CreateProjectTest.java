@@ -1,9 +1,11 @@
 package com.example.teamcity.ui;
 
 import static com.codeborne.selenide.Condition.exactText;
+import static com.codeborne.selenide.Condition.text;
 import static io.qameta.allure.Allure.step;
 
 import com.example.teamcity.api.enums.Endpoint;
+import com.example.teamcity.api.generators.TestDataStorage;
 import com.example.teamcity.api.models.Project;
 import com.example.teamcity.ui.pages.ProjectPage;
 import com.example.teamcity.ui.pages.ProjectsPage;
@@ -42,10 +44,12 @@ public class CreateProjectTest extends BaseUiTest {
     ProjectPage.open(createdProject.getId())
         .title.shouldHave(exactText(testData.getProject().getName()));
 
-    var projectExists =
-        ProjectsPage.open().getProjects().stream()
-            .anyMatch(project -> project.getName().text().equals(testData.getProject().getName()));
-    softy.assertTrue(projectExists);
+    boolean projectExists =
+        ProjectsPage.open()
+            .getProjects()
+            .stream()
+            .anyMatch(p -> p.getName().has(text(testData.getProject().getName())));
+    softy.assertTrue(projectExists, "Cannot find this project on the 'Projects page'");
   }
 
   @Test(

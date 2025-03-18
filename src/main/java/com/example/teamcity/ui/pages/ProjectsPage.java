@@ -21,12 +21,12 @@ public class ProjectsPage extends BasePage {
   // UI elements -> List<Object>
   // ElementCollection -> List<BasePageElement>
 
-  public static ProjectsPage open() {
-    return Selenide.open(PROJECTS_URL, ProjectsPage.class);
+  private ProjectsPage() {
+    header.shouldBe(visible, DEFAULT_TIMEOUT);
   }
 
-  public ProjectsPage() {
-    header.shouldBe(visible, DEFAULT_TIMEOUT);
+  public static ProjectsPage open() {
+    return Selenide.open(PROJECTS_URL, ProjectsPage.class);
   }
 
   public List<ProjectElement> getProjects() {
