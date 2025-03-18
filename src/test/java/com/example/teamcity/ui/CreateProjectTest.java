@@ -34,6 +34,9 @@ public class CreateProjectTest extends BaseUiTest {
             .readByLocator("name:" + testData.getProject().getName());
     softy.assertNotNull(createdProject);
 
+    // Добавление созданного через UI проекта в дата сторедж для дальнейшего удаления после теста
+    TestDataStorage.getStorage().addCreatedEntity(Endpoint.PROJECTS, createdProject);
+
     // проверка состояния UI
     // (корректность считывания данных и отображение данных на UI)
     ProjectPage.open(createdProject.getId())
