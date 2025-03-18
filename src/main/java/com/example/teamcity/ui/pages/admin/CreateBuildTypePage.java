@@ -10,7 +10,7 @@ import com.codeborne.selenide.SelenideElement;
 public class CreateBuildTypePage extends CreateBasePage {
   private static final String BUILD_TYPE_SHOW_MODE = "createBuildTypeMenu";
 
-  private final SelenideElement projectNameInput = $(byId("buildTypeName"));
+  public final SelenideElement buildTypeErrorMessage = $(byId("error_buildTypeName"));
 
   public static CreateBuildTypePage open(String projectId) {
     return Selenide.open(
@@ -22,8 +22,9 @@ public class CreateBuildTypePage extends CreateBasePage {
     return page(CreateBuildTypePage.class);
   }
 
-  public void setupBuildType(String buildTypeName) {
+  public CreateBuildTypePage setupBuildType(String buildTypeName) {
     buildTypeNameInput.val(buildTypeName);
     submitButton.click();
+    return page(CreateBuildTypePage.class);
   }
 }

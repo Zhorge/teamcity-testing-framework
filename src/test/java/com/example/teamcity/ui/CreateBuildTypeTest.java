@@ -12,7 +12,7 @@ import org.testng.annotations.Test;
 public class CreateBuildTypeTest extends BaseUiTest {
 
   @Test(
-      description = "User should be able to create build type in created project",
+      description = "User should be able to create 'build type' in created project",
       groups = {"Positive"})
   public void userCreatesBuildType() {
     // подготовка окружения
@@ -39,31 +39,24 @@ public class CreateBuildTypeTest extends BaseUiTest {
             .getBuildTypes()
             .stream()
             .anyMatch(b -> b.getName().has(text(testData.getBuildType().getName())));
-    softy.assertTrue(buildTypeExists, "Cannot find this build type on the 'Project page'");
+    softy.assertTrue(buildTypeExists, "Cannot find this 'build type' on the 'Project page'");
   }
 
-  //  @Test(
-  //      description = "User should not be able to craete project without name",
-  //      groups = {"Negative"})
-  //  public void userCreatesProjectWithoutName() {
-  //    // подготовка окружения
-  //    step("Login as user");
-  //    step("Check number of projects");
-  //
-  //    // взаимодействие с UI
-  //    step("Open `Create Project Page` (http://localhost:8111/admin/createObjectMenu.html)");
-  //    step("Send all project parameters (repository URL)");
-  //    step("Click `Proceed`");
-  //    step("Set Project Name");
-  //    step("Click `Proceed`");
-  //
-  //    // проверка состояния API
-  //    // (корректность отправки данных с UI на API)
-  //    step("Check that number of projects did not change");
-  //
-  //    // проверка состояния UI
-  //    // (корректность считывания данных и отображение данных на UI)
-  //    step("Check that error appears `Project name must not be empty`");
-  //  }
+    @Test(
+        description = "User should not be able to create 'build type' with the same name in one project",
+        groups = {"Negative"})
+    public void userCreatesBuildTypeWithTheSameName() {
+      loginAs(testData.getUser());
+      userCheckedRequests.getRequester(Endpoint.PROJECTS).create(testData.getProject());
+      userCheckedRequests.getRequester(Endpoint.BUILD_TYPES).create(testData.getBuildType());
 
+    String errorMessage =
+        "Build configuration with name \"%s\" already exists in project: \"%s\""
+            .formatted(testData.getBuildType().getName(), testData.getProject().getName());
+
+    CreateBuildTypePage.open(testData.getProject().getId())
+        .createForm(REPO_URL)
+        .setupBuildType(testData.getBuildType().getName())
+        .buildTypeErrorMessage.shouldHave(text(errorMessage));
+    }
 }
