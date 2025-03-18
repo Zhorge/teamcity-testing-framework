@@ -6,7 +6,6 @@ import static com.codeborne.selenide.Selenide.page;
 
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
-import com.example.teamcity.ui.pages.ProjectsPage;
 
 public class CreateProjectPage extends CreateBasePage {
   private static final String PROJECT_SHOW_MODE = "createProjectMenu";
