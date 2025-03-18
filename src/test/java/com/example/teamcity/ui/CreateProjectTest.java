@@ -14,7 +14,6 @@ import org.testng.annotations.Test;
 
 @Test(groups = {"Regression"})
 public class CreateProjectTest extends BaseUiTest {
-  private static final String REPO_URL = "https://github.com/Zhorge/teamcity-testing-framework";
 
   @Test(
       description = "User should be able to create project",
