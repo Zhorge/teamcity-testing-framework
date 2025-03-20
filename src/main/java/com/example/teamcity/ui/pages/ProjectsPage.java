@@ -1,5 +1,6 @@
 package com.example.teamcity.ui.pages;
 
+import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
@@ -29,7 +30,13 @@ public class ProjectsPage extends BasePage {
     return Selenide.open(PROJECTS_URL, ProjectsPage.class);
   }
 
-  public List<ProjectElement> getProjects() {
+  private List<ProjectElement> getProjects() {
     return generatePageElements(projectElements, ProjectElement::new);
+  }
+
+  public boolean isProjectElementExists(String projectName) {
+    return getProjects()
+        .stream()
+        .anyMatch(b -> b.getName().has(text(projectName)));
   }
 }

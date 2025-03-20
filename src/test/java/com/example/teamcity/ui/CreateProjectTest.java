@@ -1,7 +1,6 @@
 package com.example.teamcity.ui;
 
-import static com.codeborne.selenide.Condition.exactText;
-import static com.codeborne.selenide.Condition.text;
+import static com.example.teamcity.ui.UiErrors.CANT_FIND_PROJECT_ON_PROJECT_PAGE;
 import static io.qameta.allure.Allure.step;
 
 import com.example.teamcity.api.enums.Endpoint;
@@ -40,15 +39,12 @@ public class CreateProjectTest extends BaseUiTest {
 
     // проверка состояния UI
     // (корректность считывания данных и отображение данных на UI)
-    ProjectPage.open(createdProject.getId())
-        .title.shouldHave(exactText(testData.getProject().getName()));
+    ProjectPage.open(createdProject.getId());
+    ValidateElement.byText(new ProjectPage().title, testData.getProject().getName());
 
     boolean projectExists =
-        ProjectsPage.open()
-            .getProjects()
-            .stream()
-            .anyMatch(p -> p.getName().has(text(testData.getProject().getName())));
-    softy.assertTrue(projectExists, "Cannot find this project on the 'Projects page'");
+        ProjectsPage.open().isProjectElementExists(testData.getProject().getName());
+    softy.assertTrue(projectExists, CANT_FIND_PROJECT_ON_PROJECT_PAGE);
   }
 
   @Test(

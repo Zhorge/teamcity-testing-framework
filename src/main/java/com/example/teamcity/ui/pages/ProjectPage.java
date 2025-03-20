@@ -1,5 +1,6 @@
 package com.example.teamcity.ui.pages;
 
+import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$$x;
 import static com.codeborne.selenide.Selenide.$x;
@@ -17,15 +18,22 @@ public class ProjectPage extends BasePage {
 
   public final SelenideElement title = $x("//span[contains(@class, 'ProjectPageHeader__title')]");
 
-  private ProjectPage() {
+  public ProjectPage() {
     title.shouldBe(visible, DEFAULT_TIMEOUT);
   }
 
   public static ProjectPage open(String projectId) {
-    return Selenide.open(PROJECT_URL.formatted(projectId), ProjectPage.class);
+    Selenide.open(PROJECT_URL.formatted(projectId));
+    return new ProjectPage();
   }
 
-  public List<BuildTypeElement> getBuildTypes() {
+  private List<BuildTypeElement> getBuildTypes() {
     return generatePageElements(buildTypeElements, BuildTypeElement::new);
+  }
+
+  public boolean isBuildTypeElementExists(String buildTypeName) {
+    return getBuildTypes()
+        .stream()
+        .anyMatch(b -> b.getName().has(text(buildTypeName)));
   }
 }
