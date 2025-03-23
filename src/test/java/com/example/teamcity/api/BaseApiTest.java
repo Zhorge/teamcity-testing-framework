@@ -12,7 +12,7 @@ import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 
 public class BaseApiTest extends BaseTest {
-  private final UncheckedBase serverAuthRequest =
+  private final UncheckedBase authSettingsRequest =
       new UncheckedBase(Specifications.superUserSpec(), Endpoint.SERVER_AUTH_SETTINGS);
   private AuthSettings currentSettings;
 
@@ -28,33 +28,23 @@ public class BaseApiTest extends BaseTest {
 
   @Step("Enable per-project permissions via API")
   private void setUpServerAuthSettings() {
-    // 1. Получаем текущие настройки
-    currentSettings = serverAuthRequest.read().as(AuthSettings.class);
-
-    // 2. Обновляем нужные параметры
-    AuthSettings updatedSettings =
-        AuthSettings.builder()
-            .perProjectPermissions(true)
-            .modules(currentSettings.getModules())
-            .allowGuest(currentSettings.getAllowGuest())
-            .emailVerification(currentSettings.getEmailVerification())
-            .guestUsername(currentSettings.getGuestUsername())
-            .build();
-
-    // 3. Отправляем обновленные настройки
-    serverAuthRequest.update(updatedSettings).then().statusCode(SC_OK);
+    currentSettings = authSettingsRequest.read().as(AuthSettings.class);
+    authSettingsRequest.update(withPerProjectPermissions(true)).then().statusCode(SC_OK);
   }
 
   @Step("Return per-project permissions")
   private void cleanUpServerAuthSettings() {
-    // Возвращаем настройке perProjectPermissions исходное значение
-    serverAuthRequest.update(
-        AuthSettings.builder()
-            .perProjectPermissions(currentSettings.getPerProjectPermissions())
-            .modules(currentSettings.getModules())
-            .allowGuest(currentSettings.getAllowGuest())
-            .emailVerification(currentSettings.getEmailVerification())
-            .guestUsername(currentSettings.getGuestUsername())
-            .build());
+    boolean value = currentSettings.getPerProjectPermissions();
+    authSettingsRequest.update(withPerProjectPermissions(value));
+  }
+
+  private AuthSettings withPerProjectPermissions(boolean value) {
+    return AuthSettings.builder()
+        .perProjectPermissions(value)
+        .modules(currentSettings.getModules())
+        .allowGuest(currentSettings.getAllowGuest())
+        .emailVerification(currentSettings.getEmailVerification())
+        .guestUsername(currentSettings.getGuestUsername())
+        .build();
   }
 }
