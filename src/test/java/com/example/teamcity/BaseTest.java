@@ -36,8 +36,8 @@ public class BaseTest {
 
   @AfterMethod(alwaysRun = true)
   public void afterTest() {
-    softy.assertAll();
     TestDataStorage.getStorage().deleteCreatedEntities();
+    softy.assertAll();
   }
 
   @Step("Enable per-project permissions via API")
