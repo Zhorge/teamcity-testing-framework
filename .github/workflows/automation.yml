@@ -30,9 +30,9 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: TeamCity Setup
-        uses: .github/actions/teamcity-setup
+        uses: ./.github/actions/teamcity-setup
 
       - name: Run tests
         continue-on-error: true
-        # Указываем группу, чтобы не запустить тесты, связанные с сетапом Teamcity
-        run: ./mvnw test -Dtest='com.example.teamcity.${{ inputs.package }}.**' -Dgruops=Regression
+        # Указываем группу, чтобы не запустить тесты, связанные с сетапом TeamCity
+        run: ./mvnw test -Dtest='com.example.teamcity.${{ inputs.package }}.**' -Dgroups=Regression
