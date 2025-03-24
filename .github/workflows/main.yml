@@ -5,22 +5,22 @@ on: push
 jobs:
   # Собирается бекенд и деплоится на стейдж/review app
   backend:
-    uses: .github/workflows/backend-stage.yml
+    uses: ./.github/workflows/backend-stage.yml
 
-  # Собирается фронтенд и деплоится на стейдж/review app
+  # Собирается бекенд и деплоится на стейдж/review app
   frontend:
-    uses: .github/workflows/frontend-stage.yml
+    uses: ./.github/workflows/frontend-stage.yml
 
   # Прогоняются API тесты
-  autimation-api:
-    needs: [backend, frontend]
-    uses: .github/workflows/automation.yml
+  automation-api:
+    needs: [ backend, frontend ]
+    uses: ./.github/workflows/automation.yml
     with:
       package: api
 
   # Прогоняются UI тесты
-  autimation-ui:
+  automation-ui:
     needs: [ backend, frontend ]
-    uses: .github/workflows/automation.yml
+    uses: ./.github/workflows/automation.yml
     with:
       package: ui
