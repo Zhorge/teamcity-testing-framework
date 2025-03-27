@@ -15,7 +15,7 @@
     <testng.version>7.10.2</testng.version>
     <rest-assured.version>5.5.0</rest-assured.version>
     <lombok.version>1.18.36</lombok.version>
-    <allure-testng.version>2.29.1</allure-testng.version>
+    <allure.version>2.29.1</allure.version>
     <jackson.version>2.18.2</jackson.version>
     <selenide.version>7.4.3</selenide.version>
     <swagger-coverage-version>1.5.0</swagger-coverage-version>
@@ -46,7 +46,17 @@
     <dependency>
       <groupId>io.qameta.allure</groupId>
       <artifactId>allure-testng</artifactId>
-      <version>${allure-testng.version}</version>
+      <version>${allure.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.qameta.allure</groupId>
+      <artifactId>allure-selenide</artifactId>
+      <version>${allure.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.qameta.allure</groupId>
+      <artifactId>allure-rest-assured</artifactId>
+      <version>${allure.version}</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
