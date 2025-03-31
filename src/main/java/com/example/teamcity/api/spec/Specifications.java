@@ -6,6 +6,7 @@ import com.example.teamcity.api.config.Config;
 import com.example.teamcity.api.models.User;
 import com.github.viclovsky.swagger.coverage.FileSystemOutputWriter;
 import com.github.viclovsky.swagger.coverage.SwaggerCoverageRestAssured;
+import io.qameta.allure.Step;
 import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.RequestLoggingFilter;
@@ -34,6 +35,7 @@ public class Specifications {
     return reqBuilder;
   }
 
+  @Step("Auth with 'Super user'")
   public static RequestSpecification superUserSpec() {
     var requestBuilder = reqBuilder();
     requestBuilder.setBaseUri(
@@ -47,6 +49,7 @@ public class Specifications {
     return requestBuilder.build();
   }
 
+  @Step("Auth with '{user.username}'")
   public static RequestSpecification authSpec(User user) {
     var requestBuilder = reqBuilder();
     requestBuilder.setBaseUri(
