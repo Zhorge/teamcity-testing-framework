@@ -16,7 +16,7 @@ public class UncheckedBase extends Request implements CrudInterface {
   }
 
   @Override
-  @Step("POST method for '{body}'")
+  @Step("Send POST request with body: {body}")
   public Response create(BaseModel body) {
     return RestAssured
         .given()
@@ -26,7 +26,7 @@ public class UncheckedBase extends Request implements CrudInterface {
   }
 
   @Override
-  @Step("GET method")
+  @Step("Send GET request (all entities)")
   public Response read() {
     return RestAssured
         .given()
@@ -35,7 +35,7 @@ public class UncheckedBase extends Request implements CrudInterface {
   }
 
   @Override
-  @Step("GET method By id = '{id}'")
+  @Step("Send GET request by ID: {id}")
   public Response readById(String id) {
     return RestAssured
         .given()
@@ -44,7 +44,7 @@ public class UncheckedBase extends Request implements CrudInterface {
   }
 
   @Override
-  @Step("GET method By locator = '{id}'")
+  @Step("Send GET request by locator: {locator}")
   public Response readByLocator(String locator) {
     return RestAssured
         .given()
@@ -53,7 +53,7 @@ public class UncheckedBase extends Request implements CrudInterface {
   }
 
   @Override
-  @Step("PUT method for '{body}'")
+  @Step("Send PUT request with body: {body}")
   public Response update(BaseModel body) {
     return RestAssured
         .given()
@@ -63,7 +63,7 @@ public class UncheckedBase extends Request implements CrudInterface {
   }
 
   @Override
-  @Step("PUT method By id = '{id}'")
+  @Step("Send PUT request by ID: {id} with body: {body}")
   public Response updateById(String id, BaseModel body) {
     return RestAssured
         .given()
@@ -73,7 +73,7 @@ public class UncheckedBase extends Request implements CrudInterface {
   }
 
   @Override
-  @Step("GET method By locator = '{locator}' for '{body}'")
+  @Step("Send PUT request by locator: {locator} with body: {body}")
   public Response updateByLocator(String locator, BaseModel body) {
     return RestAssured
         .given()
@@ -83,7 +83,7 @@ public class UncheckedBase extends Request implements CrudInterface {
   }
 
   @Override
-  @Step("DELETE method By id = '{id}'")
+  @Step("Send DELETE request by ID: {id}")
   public Response deleteById(String id) {
     return RestAssured
         .given()
