@@ -35,7 +35,7 @@ public class Specifications {
     return reqBuilder;
   }
 
-  @Step("Auth with 'Super user'")
+  @Step("Auth as 'Super user'")
   public static RequestSpecification superUserSpec() {
     var requestBuilder = reqBuilder();
     requestBuilder.setBaseUri(
@@ -49,7 +49,7 @@ public class Specifications {
     return requestBuilder.build();
   }
 
-  @Step("Auth with '{user.username}'")
+  @Step("Auth as user: '{user.username}'")
   public static RequestSpecification authSpec(User user) {
     var requestBuilder = reqBuilder();
     requestBuilder.setBaseUri(

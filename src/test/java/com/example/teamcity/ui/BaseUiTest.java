@@ -8,6 +8,7 @@ import com.example.teamcity.api.config.Config;
 import com.example.teamcity.api.enums.Endpoint;
 import com.example.teamcity.api.models.User;
 import com.example.teamcity.ui.pages.LoginPage;
+import io.qameta.allure.Step;
 import io.qameta.allure.selenide.AllureSelenide;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeSuite;
@@ -38,6 +39,7 @@ public class BaseUiTest extends BaseTest {
     Selenide.closeWebDriver();
   }
 
+  @Step("Login as user: 'user.name'")
   protected void loginAs(User user) {
     superUserCheckRequests.getRequester(Endpoint.USERS).create(user);
     LoginPage.open().login(user);

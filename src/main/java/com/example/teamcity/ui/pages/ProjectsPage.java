@@ -27,7 +27,7 @@ public class ProjectsPage extends BasePage {
     header.shouldBe(visible, DEFAULT_TIMEOUT);
   }
 
-  @Step("Open projects page")
+  @Step("Open 'Projects Page'")
   public static ProjectsPage open() {
     return Selenide.open(PROJECTS_URL, ProjectsPage.class);
   }

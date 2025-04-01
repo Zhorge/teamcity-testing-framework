@@ -8,6 +8,7 @@ import static com.codeborne.selenide.Selenide.$;
 
 import com.codeborne.selenide.SelenideElement;
 import com.example.teamcity.ui.pages.BasePage;
+import io.qameta.allure.Step;
 
 public abstract class CreateBasePage extends BasePage {
   protected static final String CREATE_URL =
@@ -18,6 +19,7 @@ public abstract class CreateBasePage extends BasePage {
   protected SelenideElement buildTypeNameInput = $(byId("buildTypeName"));
   protected SelenideElement connectionSuccessfulMessage = $(byClassName("connectionSuccessful"));
 
+  @Step("Send all project parameters (repository URL)")
   protected void baseCreateForm(String url) {
     urlInput.val(url);
     submitButton.click();
