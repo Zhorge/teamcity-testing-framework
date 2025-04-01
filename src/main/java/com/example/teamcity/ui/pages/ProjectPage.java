@@ -23,7 +23,7 @@ public class ProjectPage extends BasePage {
     title.shouldBe(visible, DEFAULT_TIMEOUT);
   }
 
-  @Step("Open project page")
+  @Step("Open 'Project Page' with projectId = {projectId}")
   public static ProjectPage open(String projectId) {
     Selenide.open(PROJECT_URL.formatted(projectId));
     return new ProjectPage();
@@ -33,7 +33,7 @@ public class ProjectPage extends BasePage {
     return generatePageElements(buildTypeElements, BuildTypeElement::new);
   }
 
-  @Step("Check that build type '{buildTypeName}' is exist")
+  @Step("Check that buildTypeName = '{buildTypeName}' is exists")
   public boolean isBuildTypeElementExists(String buildTypeName) {
     return getBuildTypes()
         .stream()

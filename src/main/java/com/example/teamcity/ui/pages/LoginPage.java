@@ -15,12 +15,12 @@ public class LoginPage extends BasePage {
   private final SelenideElement inputPassword = $("#password");
   private final SelenideElement inputSubmitLogin = $(".loginButton");
 
-  @Step("Open login page")
+  @Step("Open 'Login Page'")
   public static LoginPage open() {
     return Selenide.open(LOGIN_URL, LoginPage.class);
   }
 
-  @Step("Login with {user.username}")
+  @Step("Login with user: '{user.name}'")
   public ProjectsPage login(User user) {
     // Метод val вместо clear, sendKeys
     inputUsername.val(user.getUsername());
