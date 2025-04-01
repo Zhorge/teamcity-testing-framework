@@ -4,6 +4,7 @@ import com.example.teamcity.api.enums.Endpoint;
 import com.example.teamcity.api.models.BaseModel;
 import com.example.teamcity.api.requests.CrudInterface;
 import com.example.teamcity.api.requests.Request;
+import io.qameta.allure.Step;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -15,6 +16,7 @@ public class UncheckedBase extends Request implements CrudInterface {
   }
 
   @Override
+  @Step("POST method for '{body}'")
   public Response create(BaseModel body) {
     return RestAssured
         .given()
@@ -24,6 +26,7 @@ public class UncheckedBase extends Request implements CrudInterface {
   }
 
   @Override
+  @Step("GET method")
   public Response read() {
     return RestAssured
         .given()
@@ -32,6 +35,7 @@ public class UncheckedBase extends Request implements CrudInterface {
   }
 
   @Override
+  @Step("GET method By id = '{id}'")
   public Response readById(String id) {
     return RestAssured
         .given()
@@ -40,6 +44,7 @@ public class UncheckedBase extends Request implements CrudInterface {
   }
 
   @Override
+  @Step("GET method By locator = '{id}'")
   public Response readByLocator(String locator) {
     return RestAssured
         .given()
@@ -48,6 +53,7 @@ public class UncheckedBase extends Request implements CrudInterface {
   }
 
   @Override
+  @Step("PUT method for '{body}'")
   public Response update(BaseModel body) {
     return RestAssured
         .given()
@@ -57,6 +63,7 @@ public class UncheckedBase extends Request implements CrudInterface {
   }
 
   @Override
+  @Step("PUT method By id = '{id}'")
   public Response updateById(String id, BaseModel body) {
     return RestAssured
         .given()
@@ -65,6 +72,8 @@ public class UncheckedBase extends Request implements CrudInterface {
         .put(endpoint.getUrl() + "/id:" + id);
   }
 
+  @Override
+  @Step("GET method By locator = '{locator}' for '{body}'")
   public Response updateByLocator(String locator, BaseModel body) {
     return RestAssured
         .given()
@@ -74,6 +83,7 @@ public class UncheckedBase extends Request implements CrudInterface {
   }
 
   @Override
+  @Step("DELETE method By id = '{id}'")
   public Response deleteById(String id) {
     return RestAssured
         .given()

@@ -6,6 +6,7 @@ import com.example.teamcity.api.models.BaseModel;
 import com.example.teamcity.api.requests.CrudInterface;
 import com.example.teamcity.api.requests.Request;
 import com.example.teamcity.api.requests.unchecked.UncheckedBase;
+import io.qameta.allure.Step;
 import io.restassured.specification.RequestSpecification;
 import org.apache.http.HttpStatus;
 
@@ -19,6 +20,7 @@ public final class CheckedBase<T extends BaseModel> extends Request implements C
   }
 
   @Override
+  @Step("POST method for '{body}'")
   public T create(BaseModel body) {
     var createdModel = (T) uncheckedBase
         .create(body)
@@ -30,6 +32,7 @@ public final class CheckedBase<T extends BaseModel> extends Request implements C
   }
 
   @Override
+  @Step("GET method")
   public T read() {
     return (T) uncheckedBase
         .read()
@@ -38,6 +41,7 @@ public final class CheckedBase<T extends BaseModel> extends Request implements C
   }
 
   @Override
+  @Step("GET method By id = '{id}'")
   public T readById(String id) {
     return (T) uncheckedBase
         .readById(id)
@@ -46,6 +50,7 @@ public final class CheckedBase<T extends BaseModel> extends Request implements C
   }
 
   @Override
+  @Step("GET method By locator = '{id}'")
   public T readByLocator(String locator) {
     return (T) uncheckedBase
         .readByLocator(locator)
@@ -54,6 +59,7 @@ public final class CheckedBase<T extends BaseModel> extends Request implements C
   }
 
   @Override
+  @Step("PUT method for '{body}'")
   public T update(BaseModel body) {
     return (T) uncheckedBase
         .update(body)
@@ -62,6 +68,7 @@ public final class CheckedBase<T extends BaseModel> extends Request implements C
   }
 
   @Override
+  @Step("PUT method By id = '{id}'")
   public T updateById(String id, BaseModel body) {
     return (T) uncheckedBase
         .updateById(id, body)
@@ -70,6 +77,7 @@ public final class CheckedBase<T extends BaseModel> extends Request implements C
   }
 
   @Override
+  @Step("GET method By locator = '{locator}' for '{body}'")
   public T updateByLocator(String locator, BaseModel body) {
     return (T) uncheckedBase
         .updateByLocator(locator, body)
@@ -78,6 +86,7 @@ public final class CheckedBase<T extends BaseModel> extends Request implements C
   }
 
   @Override
+  @Step("DELETE method By id = '{id}'")
   public Object deleteById(String id) {
     return uncheckedBase
         .deleteById(id)
