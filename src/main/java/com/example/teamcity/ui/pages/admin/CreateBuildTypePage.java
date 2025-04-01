@@ -13,7 +13,7 @@ public class CreateBuildTypePage extends CreateBasePage {
 
   public final SelenideElement buildTypeErrorMessage = $(byId("error_buildTypeName"));
 
-  @Step("Open 'Create Build Type Page' ")
+  @Step("Open 'Create Build Type Page'")
   public static CreateBuildTypePage open(String projectId) {
     return Selenide.open(
         CREATE_URL.formatted(projectId, BUILD_TYPE_SHOW_MODE), CreateBuildTypePage.class);
@@ -24,7 +24,7 @@ public class CreateBuildTypePage extends CreateBasePage {
     return page(CreateBuildTypePage.class);
   }
 
-  @Step("Send 'Build Type Name' and Click 'Proceed'")
+  @Step("Enter 'Build Type Name' and Click 'Proceed'")
   public CreateBuildTypePage setupBuildType(String buildTypeName) {
     buildTypeNameInput.val(buildTypeName);
     submitButton.click();

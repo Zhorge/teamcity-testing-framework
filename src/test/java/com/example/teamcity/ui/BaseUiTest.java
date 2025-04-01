@@ -39,7 +39,7 @@ public class BaseUiTest extends BaseTest {
     Selenide.closeWebDriver();
   }
 
-  @Step("Login as user: 'user.name'")
+  @Step("Create new User and Login on 'Login Page'")
   protected void loginAs(User user) {
     superUserCheckRequests.getRequester(Endpoint.USERS).create(user);
     LoginPage.open().login(user);

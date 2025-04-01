@@ -20,7 +20,7 @@ public class LoginPage extends BasePage {
     return Selenide.open(LOGIN_URL, LoginPage.class);
   }
 
-  @Step("Login with user: '{user.name}'")
+  @Step("Enter User Name: '{user.username}', Password: '{user.password}' and Click 'Proceed'")
   public ProjectsPage login(User user) {
     // Метод val вместо clear, sendKeys
     inputUsername.val(user.getUsername());
