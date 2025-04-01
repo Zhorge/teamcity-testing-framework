@@ -20,7 +20,7 @@ public class ProjectPage extends BasePage {
   public final SelenideElement title = $x("//span[contains(@class, 'ProjectPageHeader__title')]");
 
   public ProjectPage() {
-    title.shouldBe(visible, DEFAULT_TIMEOUT);
+    waitUntilPageIsLoaded();
   }
 
   @Step("Open 'Project Page' with projectId = {projectId}")
@@ -38,5 +38,10 @@ public class ProjectPage extends BasePage {
     return getBuildTypes()
         .stream()
         .anyMatch(b -> b.getName().has(text(buildTypeName)));
+  }
+
+  @Step("Wait until 'Project Page' is loaded")
+  private void waitUntilPageIsLoaded() {
+    title.shouldBe(visible, DEFAULT_TIMEOUT);
   }
 }
