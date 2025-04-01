@@ -16,78 +16,67 @@ public class UncheckedBase extends Request implements CrudInterface {
   }
 
   @Override
-  @Step("Send POST request with body: {body}")
   public Response create(BaseModel body) {
-    return RestAssured
-        .given()
-        .spec(spec)
-        .body(body)
-        .post(endpoint.getUrl());
+    return sendRequest("POST", endpoint.getUrl(), body);
   }
 
   @Override
-  @Step("Send GET request (all entities)")
   public Response read() {
-    return RestAssured
-        .given()
-        .spec(spec)
-        .get(endpoint.getUrl());
+    return sendRequest("GET", endpoint.getUrl(), null);
   }
 
   @Override
-  @Step("Send GET request by ID: {id}")
   public Response readById(String id) {
-    return RestAssured
-        .given()
-        .spec(spec)
-        .get(endpoint.getUrl() + "/id:" + id);
+    String url = endpoint.getUrl() + "/id:" + id;
+    return sendRequest("GET", url, null);
   }
 
   @Override
-  @Step("Send GET request by locator: {locator}")
   public Response readByLocator(String locator) {
-    return RestAssured
-        .given()
-        .spec(spec)
-        .get(endpoint.getUrl() + "/" + locator);
+    String url = endpoint.getUrl() + "/" + locator;
+    return sendRequest("GET", url, null);
   }
 
   @Override
-  @Step("Send PUT request with body: {body}")
   public Response update(BaseModel body) {
-    return RestAssured
-        .given()
-        .spec(spec)
-        .body(body)
-        .put(endpoint.getUrl());
+    return sendRequest("PUT", endpoint.getUrl(), body);
   }
 
   @Override
-  @Step("Send PUT request by ID: {id} with body: {body}")
   public Response updateById(String id, BaseModel body) {
-    return RestAssured
-        .given()
-        .spec(spec)
-        .body(body)
-        .put(endpoint.getUrl() + "/id:" + id);
+    String url = endpoint.getUrl() + "/id:" + id;
+    return sendRequest("PUT", url, body);
   }
 
   @Override
-  @Step("Send PUT request by locator: {locator} with body: {body}")
   public Response updateByLocator(String locator, BaseModel body) {
-    return RestAssured
-        .given()
-        .spec(spec)
-        .body(body)
-        .put(endpoint.getUrl().formatted(locator));
+    String url = endpoint.getUrl().formatted(locator); // если URL содержит %s
+    return sendRequest("PUT", url, body);
   }
 
   @Override
-  @Step("Send DELETE request by ID: {id}")
   public Response deleteById(String id) {
-    return RestAssured
+    String url = endpoint.getUrl() + "/id:" + id;
+    return sendRequest("DELETE", url, null);
+  }
+
+  // --- Universal request method with Allure step ---
+  @Step("Send '{method} {url}' request")
+  private Response sendRequest(String method, String url, BaseModel body) {
+    var request = RestAssured
         .given()
-        .spec(spec)
-        .delete(endpoint.getUrl() + "/id:" + id);
+        .spec(spec);
+
+    if (body != null) {
+      request.body(body);
+    }
+
+    return switch (method.toUpperCase()) {
+      case "POST" -> request.post(url);
+      case "GET" -> request.get(url);
+      case "PUT" -> request.put(url);
+      case "DELETE" -> request.delete(url);
+      default -> throw new IllegalArgumentException("Unsupported method: " + method);
+    };
   }
 }

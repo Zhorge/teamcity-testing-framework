@@ -16,7 +16,6 @@ public class CheckedRequests {
     }
   }
 
-  @Step("Выполнен запрос '{endpoint}'")
   public <T extends BaseModel> CheckedBase<T> getRequester(Endpoint endpoint) {
     return requests.get(endpoint);
   }
