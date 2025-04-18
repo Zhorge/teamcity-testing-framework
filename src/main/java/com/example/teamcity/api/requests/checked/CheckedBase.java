@@ -24,7 +24,6 @@ public final class CheckedBase<T extends BaseModel> extends Request implements C
         .create(body)
         .then().assertThat().statusCode(HttpStatus.SC_OK)
         .extract().as(endpoint.getModelClass());
-
     TestDataStorage.getStorage().addCreatedEntity(endpoint, createdModel);
     return createdModel;
   }
@@ -81,7 +80,7 @@ public final class CheckedBase<T extends BaseModel> extends Request implements C
   public Object deleteById(String id) {
     return uncheckedBase
         .deleteById(id)
-        .then().assertThat().statusCode(HttpStatus.SC_OK)
-        .extract().asString();
+        .then().assertThat().statusCode(HttpStatus.SC_OK).extract().asString();
   }
 }
+

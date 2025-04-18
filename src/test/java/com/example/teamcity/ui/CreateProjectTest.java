@@ -6,6 +6,7 @@ import static io.qameta.allure.Allure.step;
 import com.example.teamcity.api.enums.Endpoint;
 import com.example.teamcity.api.generators.TestDataStorage;
 import com.example.teamcity.api.models.Project;
+import com.example.teamcity.ui.pages.BuildStepsPage;
 import com.example.teamcity.ui.pages.ProjectPage;
 import com.example.teamcity.ui.pages.ProjectsPage;
 import com.example.teamcity.ui.pages.admin.CreateProjectPage;
@@ -19,19 +20,22 @@ public class CreateProjectTest extends BaseUiTest {
       groups = {"Positive"})
   public void userCreatesProject() {
     // подготовка окружения
+    String projectName = testData.getProject().getName();
+    String buildType = testData.getBuildType().getName();
     loginAs(testData.getUser());
 
     // взаимодействие с UI
-    CreateProjectPage.open("_Root")
-        .createForm(REPO_URL)
-        .setupProject(testData.getProject().getName(), testData.getBuildType().getName());
+    CreateProjectPage.open("_Root").createForm(REPO_URL).setupProject(projectName, buildType);
+    ValidateElement.byText(
+        new BuildStepsPage().createdProjectSuccessMessage,
+        UiMessages.newProjectSuccessMessage(projectName, buildType, REPO_URL));
 
     // проверка состояния API
     // (корректность отправки данных с UI на API)
     var createdProject =
         superUserCheckRequests
             .<Project>getRequester(Endpoint.PROJECTS)
-            .readByLocator("name:" + testData.getProject().getName());
+            .readByLocator("name:" + projectName);
     softy.assertNotNull(createdProject);
 
     // Добавление созданного через UI проекта в дата сторедж для дальнейшего удаления после теста
@@ -40,10 +44,9 @@ public class CreateProjectTest extends BaseUiTest {
     // проверка состояния UI
     // (корректность считывания данных и отображение данных на UI)
     ProjectPage.open(createdProject.getId());
-    ValidateElement.byText(new ProjectPage().title, testData.getProject().getName());
+    ValidateElement.byText(new ProjectPage().title, projectName);
 
-    boolean projectExists =
-        ProjectsPage.open().isProjectElementExists(testData.getProject().getName());
+    boolean projectExists = ProjectsPage.open().isProjectElementExists(projectName);
     softy.assertTrue(projectExists, CANT_FIND_PROJECT_ON_PROJECT_PAGE);
   }
 

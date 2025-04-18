@@ -9,6 +9,7 @@ import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import com.example.teamcity.ui.elements.BuildTypeElement;
+import io.qameta.allure.Step;
 import java.util.List;
 
 public class ProjectPage extends BasePage {
@@ -19,9 +20,10 @@ public class ProjectPage extends BasePage {
   public final SelenideElement title = $x("//span[contains(@class, 'ProjectPageHeader__title')]");
 
   public ProjectPage() {
-    title.shouldBe(visible, DEFAULT_TIMEOUT);
+    waitUntilPageIsLoaded();
   }
 
+  @Step("Open 'Project Page' with projectId = {projectId}")
   public static ProjectPage open(String projectId) {
     Selenide.open(PROJECT_URL.formatted(projectId));
     return new ProjectPage();
@@ -31,9 +33,15 @@ public class ProjectPage extends BasePage {
     return generatePageElements(buildTypeElements, BuildTypeElement::new);
   }
 
+  @Step("Check that buildTypeName = '{buildTypeName}' is exists")
   public boolean isBuildTypeElementExists(String buildTypeName) {
     return getBuildTypes()
         .stream()
         .anyMatch(b -> b.getName().has(text(buildTypeName)));
+  }
+
+  @Step("Wait until 'Project Page' is loaded")
+  private void waitUntilPageIsLoaded() {
+    title.shouldBe(visible, DEFAULT_TIMEOUT);
   }
 }
